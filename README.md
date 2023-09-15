@@ -21,3 +21,18 @@ Esta es una aplicación web para reservar habitaciones de un hotel en la ciudad 
 
 ```bash
 pip install -r requeriments.txt
+
+## Estructura del Proyecto
+
+
+- `apps/`: Directorio que contiene las aplicaciones Django.
+- `config/`: Directorio que contiene la configuración principal de Django.
+- `static/`: Directorio para archivos estáticos como CSS, JavaScript, etc.
+- `templates/`: Directorio para las plantillas HTML utilizadas en la aplicación.
+- `tests/`: Directorio para archivos de pruebas.
+- `LICENSE`: Archivo de licencia del proyecto.
+- `manage.py`: El archivo de gestión de Django para realizar tareas administrativas.
+- `README.md`: Este archivo, que proporciona información sobre el proyecto.
+- `requeriments.txt`: Archivo que lista las dependencias necesarias para el proyecto.
+
+
