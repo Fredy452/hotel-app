@@ -21,6 +21,7 @@ Esta es una aplicación web para reservar habitaciones de un hotel en la ciudad 
 
 ```bash
 pip install -r requeriments.txt
+```
 
 ## Estructura del Proyecto
 
