@@ -1,16 +1,78 @@
-from django.shortcuts import render, HttpResponse
+# Django
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
-
-# Create your views here.
-def login(request):
-    """
-    Funcion de vista `login`
-    """
-    return render(request, 'auth/login.html')
+# Forms
+from apps.user.forms import CustomUserCreationForm
 
 
 def register(request):
     """
-    Funcion de vista `register`
+    Vista para el registro de usuarios.
+
+    Esta vista permite a los usuarios registrarse en el sistema. Se manejan dos métodos HTTP: GET y POST.
+
+    Para el método GET:
+    - Muestra el formulario de registro en la página 'user/register.html'.
+
+    Para el método POST:
+    - Valida el formulario de registro enviado por el usuario.
+    - Si el formulario es válido, crea una nueva cuenta de usuario y redirige al usuario a la página de inicio de sesión.
+    - Si el formulario no es válido, muestra los errores en la misma página de registro.
+
+    :param request: La solicitud HTTP enviada por el cliente.
+    :type request: HttpRequest
+
+    :return: Si el método es POST y el formulario es válido, redirecciona a 'user:login'.
+             Si el método es POST y el formulario no es válido, muestra los errores en 'user/register.html'.
+             Si el método es GET, muestra el formulario de registro en 'user
+             /register.html'.
+    :rtype: HttpResponse
     """
-    return render(request, 'auth/register.html')
+    
+    if request.method == 'POST':  # noqa: E501
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('user:login')
+        else:
+            errors = form.errors
+            return render(request, 'user/register.html', {'errors': errors})
+    else:
+        return render(request, 'user/register.html')
+
+
+def user_login(request):
+    """
+    Vista para la autenticación de usuarios.
+
+    Esta vista permite a los usuarios iniciar sesión en el sistema. Maneja dos métodos HTTP: GET y POST.
+
+    Para el método GET:
+    - Muestra el formulario de inicio de sesión en la página 'user/login.html'.
+
+    Para el método POST: - Verifica las credenciales del usuario proporcionadas en el formulario de inicio de sesión.
+    - Si las credenciales son correctas, inicia sesión en la cuenta del usuario y redirige a 'hotel:index'. - Si las
+    credenciales son incorrectas, muestra un mensaje de error en la página y vuelve a mostrar el formulario de inicio
+    de sesión.
+
+    :param request: La solicitud HTTP enviada por el cliente.
+    :type request: HttpRequest
+
+    :return: Si el método es POST y las credenciales son correctas, redirecciona a 'hotel:index'. Si el método es
+    POST y las credenciales son incorrectas, muestra un mensaje de error y vuelve a mostrar el formulario. Si el
+    método es GET, muestra el formulario de inicio de sesión en 'user/login.html'. :rtype: HttpResponse
+    """  # noqa: E501
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('hotel:index')
+        else:
+            messages.error(request, 'Las credenciales proporcionadas son incorrectas. '
+                                    'Por favor, inténtalo de nuevo.')
+    return render(request, 'user/login.html')
