@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ user.username }} {% endblock %}
+
+{% block content %}
+    <div class="content mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow">
+                    <div class="card-header">
+                        {{ user.username }} Actualizar Perfil
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_first_name">Primer nombre</label>
+                                <input type="text" id="id_first_name" name="first_name" value="{{ profile.first_name }}" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_last_name">Apellido</label>
+                                <input type="text" id="id_last_name" name="last_name" value="{{ profile.last_name }}" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Edad</label>
+                                <input type="number" id="age" name="age" value="{{ profile.age }}" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="bio">Descripción</label>
+                                <textarea class="form-control" name="bio" id="bio" cols="15" rows="5">{{ profile.bio }}</textarea>
+                            </div>
+                             <div class="form-group">
+                                <label for="direction">Direccion</label>
+                                <input type="text" id="direction" name="direction" value="{{ profile.direction }}" class="form-control">
+                            </div>
+                            <div class="form-group mb-2 mt-2">
+                                <label for="id_avatar">Avatar</label>
+                                <input type="file" id="id_avatar" name="profile" accept="image/*" class="form-control-file">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

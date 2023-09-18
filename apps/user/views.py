@@ -1,8 +1,10 @@
 # Django
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from apps.user.models import Profile
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from .forms import ProfileForm
 
 # Forms
 from apps.user.forms import CustomUserCreationForm
@@ -31,15 +33,17 @@ def register(request):
              /register.html'.
     :rtype: HttpResponse
     """
-    
+
     if request.method == 'POST':  # noqa: E501
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            profile = Profile(user=user)
+            profile.save()
             return redirect('user:login')
         else:
             errors = form.errors
-            return render(request, 'user/register.html', {'errors': errors})
+            return redirect(request, 'user/register.html', {'errors': errors})
     else:
         return render(request, 'user/register.html')
 
@@ -71,8 +75,62 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('hotel:index')
+            print(user.id)
+            return redirect('user:updated', user_id=user.id, username=user.username)
         else:
             messages.error(request, 'Las credenciales proporcionadas son incorrectas. '
                                     'Por favor, inténtalo de nuevo.')
     return render(request, 'user/login.html')
+
+
+def user_logout(request):
+    """
+    Cerrar sesión de un usuario.
+
+    Esta vista permite a un usuario cerrar sesión en su cuenta.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP que activa la vista.
+
+    Returns:
+        HttpResponseRedirect: Redirige al usuario a la página de inicio de sesión.
+    """
+    logout(request)
+    return redirect('user:login')
+
+
+def user_profile(request, user_id, username):
+    """
+    Funcion de vista profile
+    """
+    user = get_object_or_404(User, id=user_id)
+    profile = get_object_or_404(Profile, user=user)
+    context = {'user': user,
+               'profile': profile}
+
+    return render(request, 'user/profile/show_profile.html', context)
+
+
+def user_profile_updated(request, user_id, username):
+    """
+    Funcion de vista User Profile Updated
+    """
+    user = get_object_or_404(User, id=user_id)
+    profile = get_object_or_404(Profile, user=user)
+
+    if request.method == 'POST':
+        profile.first_name = request.POST.get('first_name', profile.first_name)
+        profile.last_name = request.POST.get('last_name', profile.last_name)
+        profile.age = request.POST.get('age', profile.age)
+        profile.bio = request.POST.get('bio', profile.bio)
+        profile.direction = request.POST.get('direction', profile.direction)
+        profile.profile = request.FILES.get('profile', profile.profile)
+
+        profile.save()
+
+        return redirect('user:profile', user_id=user_id, username=username)
+
+    context = {'user': user,
+               'profile': profile}
+
+    return render(request, 'user/profile/updated_profile.html', context)

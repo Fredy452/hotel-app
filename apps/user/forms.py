@@ -4,6 +4,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from apps.user.models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -43,5 +44,10 @@ class CustomUserCreationForm(UserCreationForm):
 
         email = self.cleaned_data["email"]
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError(message="El correo ya existe.")
+            raise forms.ValidationError(message="El correo ya existe, intente con otro")
         return email
+
+
+class ProfileForm(forms.ModelForm):
+    model = Profile
+    fields = ['first_name', 'last_name', 'age', 'direction', 'profile']
