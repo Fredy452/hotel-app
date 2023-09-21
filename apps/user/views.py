@@ -43,7 +43,7 @@ def register(request):
             return redirect('user:login')
         else:
             errors = form.errors
-            return redirect(request, 'user/register.html', {'errors': errors})
+            return render(request, 'user/register.html', {'errors': errors})
     else:
         return render(request, 'user/register.html')
 

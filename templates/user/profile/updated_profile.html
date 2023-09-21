@@ -2,47 +2,69 @@
 
 {% block title %} {{ user.username }} {% endblock %}
 
-{% block content %}
-    <div class="content mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card shadow">
-                    <div class="card-header">
-                        {{ user.username }} Actualizar Perfil
-                    </div>
-                    <div class="card-body">
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="id_first_name">Primer nombre</label>
-                                <input type="text" id="id_first_name" name="first_name" value="{{ profile.first_name }}" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="id_last_name">Apellido</label>
-                                <input type="text" id="id_last_name" name="last_name" value="{{ profile.last_name }}" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="age">Edad</label>
-                                <input type="number" id="age" name="age" value="{{ profile.age }}" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="bio">Descripción</label>
-                                <textarea class="form-control" name="bio" id="bio" cols="15" rows="5">{{ profile.bio }}</textarea>
-                            </div>
-                             <div class="form-group">
-                                <label for="direction">Direccion</label>
-                                <input type="text" id="direction" name="direction" value="{{ profile.direction }}" class="form-control">
-                            </div>
-                            <div class="form-group mb-2 mt-2">
-                                <label for="id_avatar">Avatar</label>
-                                <input type="file" id="id_avatar" name="profile" accept="image/*" class="form-control-file">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                        </form>
+{% block mboostrap %}
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.css" rel="stylesheet"/>
+{% endblock %}
 
+{% block content %}
+    <section class="vh-100" style="background-color: #eee;">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-9">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+                                <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Actualizar Perfil</p>
+                                <form method="post" enctype="multipart/form-data" class="mx-1 mx-md-4">
+                                    {% csrf_token %}
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <div class="form-outline flex-fill mb-0">
+                                            <input type="text" id="first_name" name="username" value="{{ profile.first_name }}" class="form-control" />
+                                            <label class="form-label" for="first_name">Nombre</label>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <div class="form-outline flex-fill mb-0">
+                                            <input type="text" id="last_name" name="last_name" value="{{ profile.last_name }}" class="form-control" />
+                                            <label class="form-label" for="last_name">Apellido</label>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <div class="form-outline flex-fill mb-0">
+                                            <input type="number" id="age" name="age" value="{{ profile.age }}" class="form-control" />
+                                            <label class="form-label" for="age">Edad</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-outline">
+                                        <textarea class="form-control mb-4" name="bio"  id="textAreaExample2" rows="5">{{ profile.bio }}</textarea>
+                                        <label class="form-label" for="textAreaExample2">Descripción</label>
+                                    </div>
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <div class="form-outline flex-fill mb-0">
+                                            <input type="text" id="direction" name="direction" value="{{ profile.direction }}" class="form-control" />
+                                            <label class="form-label" for="direction">Direccion</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2 mt-2">
+                                        <label for="formFileDisabled" class="form-label">Foto de perfil</label>
+                                        <input type="file"  id="formFileDisabled" name="profile" accept="image/*" class="form-control">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+{% endblock %}
+
+{% block mboostrapScript %}
+    <!-- MDB -->
+    <script
+            type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.1/mdb.min.js"
+    ></script>
 {% endblock %}
