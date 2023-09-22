@@ -1,4 +1,4 @@
-"""Hotel views.""""""
+"""Hotel views."""
 
 # Django
 from django.shortcuts import redirect, render
@@ -28,5 +28,39 @@ def hotel_search(request):
     Args:
         request (_type_): _description_
     """
+    if request.method == 'POST':
+        print(request.POST['check_in_date'])
+        return redirect('hotel:index')
 
-    pass
+    else:
+        return redirect('hotel:index')
+
+
+def rooms(request):
+    """
+    Funcion de vista rooms
+    """
+    hotel = Hotel.objects.get(id=1)
+    all_rooms = hotel.room_set.all()
+
+    context = {
+        'hotel': hotel,
+        'all_rooms': all_rooms
+    }
+
+    return render(request, 'hotel/hotel_rooms.html', context)
+
+
+def rooms_details(request, room_id):
+    """
+    Funcion de vita room details
+    """
+    hotel = Hotel.objects.get(id=1)
+    room = hotel.room_set.get(id=room_id)
+
+    context = {
+        'hotel': hotel,
+        'room': room
+    }
+
+    return render(request, 'hotel/hotel_rooms_details.html', context)

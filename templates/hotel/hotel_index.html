@@ -29,7 +29,7 @@
                                 <h2 class="title-a">Habitaciones</h2>
                             </div>
                             <div class="title-link">
-                                <a href="property-grid.html">Ver Todos
+                                <a href="{% url 'hotel:rooms' %}">Ver Todos
                                     <span class="bi bi-chevron-right"></span>
                                 </a>
                             </div>
@@ -44,7 +44,7 @@
                             <div class="carousel-item-b swiper-slide">
                                 <div class="card-box-a card-shadow">
                                     <div class="img-box-a">
-                                        <img src="{{ room.img.url }}" alt="" class="img-a img-fluid">
+                                        <img src="{{ room.img.url }}" alt="{{ room.description }}" class="img-a img-fluid">
                                     </div>
                                     <div class="card-overlay">
                                         <div class="card-overlay-a-content">

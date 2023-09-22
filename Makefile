@@ -27,3 +27,7 @@ dropdb-psql:
 	@sudo psql -U postgres -d postgres -c "SELECT datname FROM pg_database WHERE datname = '$(DB_NAME)';" | grep -q $(DB_NAME) || (echo "Database does not exist" && exit 1)
 	@echo "Deleting database..."
 	@sudo psql -U postgres -c "DROP DATABASE $(DB_NAME);"
+
+runserver:
+	@echo "Running server..."
+	@python manage.py runserver

@@ -5,7 +5,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 # Models
-from apps.hotel.models import Hotel, Room, Booking
+from apps.hotel.models import Hotel, Room, Booking, Amenity
+from apps.hotel.forms import RoomForm
 
 
 @admin.register(Hotel)
@@ -26,6 +27,7 @@ class HotelAdmin(admin.ModelAdmin):
 
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
+    form = RoomForm
     list_display = ('hotel', 'number', 'type', 'availability', 'price', 'display_img')
 
     def display_img(self, obj):
@@ -45,3 +47,9 @@ class BookingAdmin(admin.ModelAdmin):
     """Booking admin class."""
 
     list_display = ('user', 'check_in_date', 'check_out_date', 'status', 'total_price')
+
+
+@admin.register(Amenity)
+class AmentyAdmin(admin.ModelAdmin):
+    """Amenty admin class."""
+

@@ -4,6 +4,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+
+# Models
 from apps.user.models import Profile
 
 
