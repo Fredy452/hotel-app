@@ -4,8 +4,8 @@ from apps.user.models import Profile
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import ProfileForm
 
+from apps.hotel.models import Hotel
 # Forms
 from apps.user.forms import CustomUserCreationForm
 
@@ -106,7 +106,8 @@ def user_profile(request, user_id, username):
     user = get_object_or_404(User, id=user_id)
     profile = get_object_or_404(Profile, user=user)
     context = {'user': user,
-               'profile': profile}
+               'profile': profile,
+               'hotel': Hotel.objects.get(id=1)}
 
     return render(request, 'user/profile/show_profile.html', context)
 

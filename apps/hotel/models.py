@@ -9,6 +9,8 @@ from apps.user.models import User
 
 
 class BaseModel(models.Model):
+    """Clase base para los modelos."""
+
     created = models.DateTimeField(default=timezone.now, editable=False)
     updated = models.DateTimeField(auto_now=True)
 
@@ -23,9 +25,9 @@ class Hotel(BaseModel):
     second_name = models.CharField(max_length=50)
     logo = models.ImageField(upload_to='logos', blank=True, null=True)
     description = models.TextField(default="Sin descripción")
-    direction = models.CharField(blank=True, null=True)
+    direction = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
-    phone = models.CharField('teléfono', blank=True, null=True)
+    phone = models.CharField('teléfono', max_length=12, blank=True, null=True)
 
     class Meta:
         """Meta options."""
@@ -39,7 +41,7 @@ class Hotel(BaseModel):
 
 class Amenity(BaseModel):
     """Comodidades de una habitación"""
-    name = models.CharField(max_length=50)
+    name = models.CharField('nombre', max_length=50)
 
     def __str__(self):
         """Retorna la propiedad `name`."""
@@ -54,7 +56,7 @@ class Amenity(BaseModel):
 class Room(BaseModel):
     """Habitaciones de un hotel."""
 
-    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE)
+    hotel = models.ForeignKey(Hotel, verbose_name='hotel', on_delete=models.CASCADE)
     number = models.CharField('N° Habitación', max_length=10)
     ROOM_TYPES = (
         ('individual', 'Individual'),
@@ -82,23 +84,28 @@ class Room(BaseModel):
 class Booking(BaseModel):
     """Reservas de habitaciones."""
 
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    check_in_date = models.DateTimeField('Inicio')
-    check_out_date = models.DateTimeField('Fin')
+    room = models.ForeignKey(Room, verbose_name='habitación', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name='usuario', on_delete=models.CASCADE)
+    check_in_date = models.DateTimeField('inicio')
+    check_out_date = models.DateTimeField('fin')
     RESERVATION_STATUS = (
-        ('approved', 'Aprobado'),
         ('outstanding', 'Pendiente'),
+        ('approved', 'Aprobado'),
     )
     status = models.CharField('Estado', max_length=20, choices=RESERVATION_STATUS)
-    total_price = models.DecimalField('Total a Pagar', max_digits=10,
-                                      decimal_places=0)  # TODO: esto debería ser un `IntegerField``
+    total_price = models.DecimalField(
+        'Total a Pagar',
+        max_digits=10,
+        decimal_places=0  # TODO: esto debería ser un `IntegerField`.
+    )
     additional_notes = models.TextField(blank=True, null=True)
 
     class Meta:
         """Meta options."""
         verbose_name = 'Reserva'
         verbose_name_plural = 'Reservas'
+        # Ordenar las reservas por fecha de creación de forma descendente.
+        ordering = ['-created']  # El signo menos indica que es de forma descendente.
 
     def __str__(self):
         """Retorna la propiedad `username` del usuario."""

@@ -16,7 +16,7 @@ class HotelAdmin(admin.ModelAdmin):
     def display_logo_image(self, obj):
         if obj.logo:
             return format_html(
-                '<div style="width: 50px; height: 50px; overflow: hidden; border-radius: 50%;"><img src="{}" '
+                '<div style="width: 50px; height: 50px; overflow: hidden; border-radius: 50%;"><img src="{}" '  # noqa: E501
                 'style="width: 100%; height: auto;"></div>',
                 obj.logo.url)
         else:
@@ -33,7 +33,7 @@ class RoomAdmin(admin.ModelAdmin):
     def display_img(self, obj):
         if obj.img:
             return format_html(
-                '<div style="width: 50px; height: 50px; overflow: hidden;"><img src="{}" '
+                '<div style="width: 50px; height: 50px; overflow: hidden;"><img src="{}" '  # noqa: E501
                 'style="width: 100%; height: auto;"></div>',
                 obj.img.url)
         else:

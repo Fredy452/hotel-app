@@ -50,7 +50,7 @@
                                         <div class="card-overlay-a-content">
                                             <div class="card-header-a">
                                                 <h2 class="card-title-a">
-                                                    <a href="#">{{ room.number }} {{ room.type }}
+                                                    <a href="{% url 'hotel:rooms_details' room_id=room.id %}">{{ room.number }} {{ room.type }}
                                                         <br /> {{ room.hotel.name }} {{ room.hotel.second_name }}</a>
                                                 </h2>
                                             </div>

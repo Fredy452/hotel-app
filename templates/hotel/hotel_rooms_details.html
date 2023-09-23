@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %} Detalles {% endblock title %}
 
@@ -65,7 +66,7 @@
                       <span class="bi bi-cash">₲</span>
                     </div>
                     <div class="card-title-c align-self-center">
-                      <h5 class="title-c">{{ room.price  }}</h5>
+                      <h5 class="title-c">{{ room.price|intcomma  }}</h5>
                     </div>
                   </div>
                 </div>
@@ -131,7 +132,38 @@
                   </ul>
                 </div>
               </div>
-                <button class="btn btn-success">Reservar</button>
+
+              <!-- Sección para reservar: fecha llegada y salida -->
+              <div class="col-md-12 col-lg-12 section-md-t3">
+                <div class="row">
+                  <div class="row section-t3">
+                    <div class="col-sm-12">
+                      <div class="title-box-d">
+                        <h3 class="title-d">Reservar</h3>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="property-description">
+                    <form action="{% url 'hotel:room_reservation' room_id=room.id user_id=user.id %}" method="post">
+                      {% csrf_token %}
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <label for="checkin">Fecha de llegada</label>
+                          <input type="date" class="form-control" id="checkin" name="check_in_date" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <label for="checkout">Fecha de salida</label>
+                          <input type="date" class="form-control" id="checkout" name="check_out_date" required>
+                        </div>
+                        <div class="col-md-4 mb-3 d-flex align-items-end">
+                          <button type="submit" class="btn btn-success">Reservar</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
