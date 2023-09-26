@@ -1,9 +1,9 @@
 /**
-* Template Name: EstateAgency - v4.7.0
-* Template URL: https://bootstrapmade.com/real-estate-agency-bootstrap-template/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
+ * Template Name: EstateAgency - v4.7.0
+ * Template URL: https://bootstrapmade.com/real-estate-agency-bootstrap-template/
+ * Author: BootstrapMade.com
+ * License: https://bootstrapmade.com/license/
+ */
 (function() {
   "use strict";
 
@@ -34,7 +34,7 @@
   }
 
   /**
-   * Easy on scroll event listener 
+   * Easy on scroll event listener
    */
   const onscroll = (el, listener) => {
     el.addEventListener('scroll', listener)
@@ -209,4 +209,9 @@
     }
   });
 
+/*
+* Using datapicket
+ */
+  const today_date = "{{ now|date:'Y-m-d' }}";
+  $('.datepicker').datepicker();
 })()

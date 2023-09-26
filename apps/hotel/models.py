@@ -86,11 +86,11 @@ class Booking(BaseModel):
 
     room = models.ForeignKey(Room, verbose_name='habitación', on_delete=models.CASCADE)
     user = models.ForeignKey(User, verbose_name='usuario', on_delete=models.CASCADE)
-    check_in_date = models.DateTimeField('inicio')
-    check_out_date = models.DateTimeField('fin')
+    check_in_date = models.DateField('inicio')
+    check_out_date = models.DateField('fin')
     RESERVATION_STATUS = (
-        ('outstanding', 'Pendiente'),
-        ('approved', 'Aprobado'),
+        ('pendiente', 'Pendiente'),
+        ('aprovado', 'Aprobado'),
     )
     status = models.CharField('Estado', max_length=20, choices=RESERVATION_STATUS)
     total_price = models.DecimalField(

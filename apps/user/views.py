@@ -36,10 +36,10 @@ def register(request):
 
     if request.method == 'POST':  # noqa: E501
         form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            profile = Profile(user=user)
-            profile.save()
+        if form.is_valid(): # Aca validamos
+            user = form.save() # aca guardamos
+            profile = Profile(user=user) # creamos un perfil
+            profile.save() # guardamos usario en sesion
             return redirect('user:login')
         else:
             errors = form.errors
@@ -75,8 +75,11 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            print(user.id)
-            return redirect('user:updated', user_id=user.id, username=user.username)
+            messages.success(request, 'Operación realizada con éxito.')
+            if not user.profile.profile:
+                return redirect('user:updated', user_id=user.id, username=user.username)
+            else:
+                return redirect('user:profile', user_id=user.id, username=user.username)
         else:
             messages.error(request, 'Las credenciales proporcionadas son incorrectas. '
                                     'Por favor, inténtalo de nuevo.')

@@ -1,47 +1,136 @@
 {% extends "base.html" %}
 
 {% block title %} Lista de Reservas {% endblock title %}
+{% load humanize %}
 
 {% block nav %}
     {% include "hotel/includes/hotel_nav.html" %}
 {% endblock nav %}
 
-{% block content %}
 
-<main id="main">
-    <!-- ======= Intro Single ======= -->
-    <section class="intro-single">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 col-lg-8">
-                    <div class="title-single-box">
-                        <h1 class="title-single">{{ profile.first_name }} {{ profile.last_name }}</h1>
-                        <span class="color-text-a">Reservas</span>
+
+{% block content %}
+{% include 'hotel/includes/notifications.html' %}
+    <main id="main">
+        <!-- ======= Intro Single ======= -->
+        <section class="intro-single">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 col-lg-8">
+                        <div class="title-single-box">
+                            <h1 class="title-single">{{ profile.first_name }} {{ profile.last_name }}</h1>
+                            <span class="color-text-a">Lista de Reservas</span>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4">
+                        <nav aria-label="breadcrumb" class="breadcrumb-box d-flex justify-content-lg-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{% url 'hotel:index' %}">Inicio</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="#">Mis Reservas</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ profile.first_name }} {{ profile.last_name }}
+                                </li>
+                            </ol>
+                        </nav>
                     </div>
                 </div>
-                <div class="col-md-12 col-lg-4">
-                    <nav aria-label="breadcrumb" class="breadcrumb-box d-flex justify-content-lg-end">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{% url 'hotel:index' %}">Inicio</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="#">Mis Reservas</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                {{ profile.first_name }} {{ profile.last_name }}
-                            </li>
-                        </ol>
-                    </nav>
+            </div>
+        </section><!-- End Intro Single -->
+
+        <section class="property-single nav-arrow-b">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">N°</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Inicio</th>
+                            <th scope="col">Fin</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for booking in bookings %}
+                            <tr>
+                                <td>{{ booking.room.number }}</td>
+                                <td>{{ booking.room.type }}</td>
+                                <td>{{ booking.check_in_date | date:"F j, Y" }}</td>
+                                <td>{{ booking.check_out_date | date:"F j, Y" }}</td>
+                                {% if booking.status == 'outstanding' %}
+                                    <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+                                {% elif booking.status == 'cancelado' %}
+                                    <td><span class="badge bg-danger">Cancelado</span></td>
+                                {% else %}
+                                    <td><span class="badge bg-success">Aprobado</span></td>
+                                {% endif %}
+                                <td>₲ {{ booking.total_price|intcomma }}</td>
+                                <td>
+                                    <a class="btn btn-success" href="{% url 'hotel:reservation_detail' user_id=user.id booking_id=booking.id %}"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="{% url 'hotel:reservation_cancel' user_id=user.id booking_id=booking.id %}" class="btn btn-warning" title="Cancelar"><i class="fa-solid fa-xmark"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- Modal -->
+                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section><!-- End Intro Single -->
+        </section>
 
-    <pre>{{ bookings }}</pre>
+    <script>
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        const bookingId = button.data('booking-id');
+        const userId = button.data('user-id');
+        const url = `/hotel/reservation/user/${userId}/reservation/${bookingId}`;
+
+        // Puedes usar bookingId para obtener información específica de la reserva
+        // y actualizar el contenido del modal aquí
+        // Por ejemplo, mediante una solicitud AJAX al servidor
+        // y luego mostrar los datos en el modal
+        $.ajax({
+            url: url,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // Actualiza el contenido del modal con los datos obtenidos
+                console.log(data);
+                $('#modal-title').text(data.room_number);
+                $('#modal-body').html(data.room_type);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    });
+</script>
 
 
-</main>
+    </main>
 {% endblock content %}
 
 

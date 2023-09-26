@@ -1,0 +1,14 @@
+<script>
+    /*
+    * Implementando toastr
+     */
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        positionClass: 'toast-top-right', // Puedes ajustar la posición según tus preferencias
+    };
+    // Verificar si hay mensajes de Django y mostrarlos con toastr
+    {% for message in messages %}
+        toastr.{{ message.tags }}('{{ message }}', 'Mensaje del sistema');
+    {% endfor %}
+</script>
